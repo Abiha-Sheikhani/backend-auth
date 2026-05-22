@@ -9,13 +9,16 @@ const app = express();
 // Connect Database
 connectDB();
 
-// Middleware
+// CORS — allow all origins (fix for Vercel)
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? 'https://your-production-domain.com'
-    : ['http://localhost:5173', 'http://localhost:3001', 'http://localhost:5174'],
-  credentials: true,
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: false,
 }));
+
+// Handle preflight requests
+app.options('*', cors());
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
